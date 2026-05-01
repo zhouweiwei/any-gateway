@@ -1,0 +1,31 @@
+# Go
+vendor/
+*.exe
+*.exe~
+*.test
+*.out
+go.work
+go.work.sum
+coverage.out
+coverage.html
+
+# Build output
+/any-gateway
+/dist/
+/build/
+
+# OS
+.DS_Store
+.idea/
+.vscode/
+Thumbs.db
+
+# Claude Code
+.claude/settings.local.json
+
+# Local planning notes (Claude Code harness)
+plans/
+
+# Local config (per-user; commit config.example.yaml instead)
+config.yaml
+config.local.yaml
