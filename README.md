@@ -1,16 +1,16 @@
 # any-gateway
 
-> A tiny, stateless local LLM gateway that routes by model name — point Claude Code once and let the model field decide whether to talk to Anthropic or OpenAI.
+A tiny, stateless local LLM gateway — defaults to https://anyrouter.top, works with any upstream. More versatile, more customized.
 
 ## About
 
-A single Go binary on `localhost` that forwards LLM traffic between clients (Claude Code, Cursor, scripts) and upstreams (Anthropic, OpenAI). Stateless: no API keys on disk, no caching, no shared memory between requests.
+A single Go binary on `localhost` that forwards LLM traffic between clients (Claude Code, Cursor, scripts) and upstreams — an Anthropic-compatible endpoint (default: https://anyrouter.top) and OpenAI. Stateless: no API keys on disk, no caching, no shared memory between requests.
 
-Routing is narrow: if the request body's `model` starts with `openai-`, the gateway translates Anthropic Messages into OpenAI Responses format and forwards to OpenAI. Everything else forwards to Anthropic unchanged. Outgoing requests can additionally pass through an opt-in chain of request-side plugins, starting with a header-injection plugin.
+Routing is narrow: if the request body's `model` starts with `openai-`, the gateway translates Anthropic Messages into OpenAI Responses format and forwards to OpenAI. Everything else forwards to the configured Anthropic-compatible upstream (default: https://anyrouter.top) unchanged. Outgoing requests can additionally pass through an opt-in chain of request-side plugins, starting with a header-injection plugin.
 
 ## Features
 
-- Forwards `POST /v1/messages` to Anthropic by default, preserving headers, streaming, and the original model name.
+- Forwards `POST /v1/messages` to the configured Anthropic-compatible upstream (default: https://anyrouter.top), preserving headers, streaming, and the original model name.
 - Translates `POST /v1/messages` into an OpenAI Responses call when the model name starts with `openai-` — the prefix is stripped and the rest is sent as the OpenAI model.
 - Covers the full translation surface: request body, SSE stream, tool calls, system prompt, multi-turn, errors, and token-usage reporting.
 - Forwards `POST /v1/responses` verbatim to OpenAI for clients that already speak the Responses API.
