@@ -22,10 +22,12 @@ Outgoing upstream requests can additionally pass through an opt-in chain of requ
 
 ## Roadmap & status
 
-- **Anthropic default forward** — forward `POST /v1/messages` to `upstreams.anthropic` unchanged for any model name that does not start with `openai-`. *Status: not started.*
-- **OpenAI passthrough** — forward `POST /v1/responses` to `upstreams.openai` unchanged, including SSE streams. *Status: not started.*
-- **Anthropic → OpenAI translation** — full-fidelity translation of `POST /v1/messages` with `openai-*` models into OpenAI Responses calls, covering streaming, tool calls, system prompt, multi-turn, errors, and token-usage reporting. *Status: not started.*
-- **Request-side plugin system** — a chain runner that loads plugins from config, applies enabled ones in order to the outgoing upstream request, and ships with one concrete plugin (header injection: configurable name + value added to every upstream request). All plugins disabled by default. *Status: not started.*
+| # | Step | Status |
+|---|------|--------|
+| 1 | Anthropic default forward | ❌ |
+| 2 | OpenAI passthrough | ❌ |
+| 3 | Anthropic → OpenAI translation | ❌ |
+| 4 | Request-side plugin system (with header-injection plugin) | ❌ |
 
 ## License
 
