@@ -4,11 +4,9 @@
 
 ## About
 
-A single Go binary that listens on `localhost`, inspects the request body's `model` field, and forwards to the matching upstream. It owns no API keys and holds no per-user state — every key, host, and request parameter flows from the original request, mutated only when the path requires translation.
+A single Go binary on `localhost` that forwards LLM traffic between clients (Claude Code, Cursor, scripts) and upstreams (Anthropic, OpenAI). Stateless: no API keys on disk, no caching, no shared memory between requests.
 
-The gateway sits between an LLM client (Claude Code, Cursor, scripts) and the upstream providers (Anthropic, OpenAI). The routing rule is intentionally narrow: only the `openai-` prefix triggers anything. If the request body's `model` field starts with `openai-`, the gateway rewrites headers, translates the JSON body and SSE stream from Anthropic's Messages format to OpenAI's Responses format, and forwards to OpenAI. Every other `POST /v1/messages` request — regardless of model name — is forwarded to Anthropic unchanged. For OpenAI clients hitting `/v1/responses` directly, the gateway forwards verbatim.
-
-Outgoing upstream requests can additionally pass through an opt-in chain of request-side plugins — small filters that mutate headers, body, or query before the request leaves the gateway. Plugins ship disabled; each one is enabled individually in `config.yaml`. The first shipped plugin injects a configured header into every upstream request; further plugins are added as discrete features.
+Routing is narrow: if the request body's `model` starts with `openai-`, the gateway translates Anthropic Messages into OpenAI Responses format and forwards to OpenAI. Everything else forwards to Anthropic unchanged. Outgoing requests can additionally pass through an opt-in chain of request-side plugins, starting with a header-injection plugin.
 
 ## Features
 
@@ -24,10 +22,10 @@ Outgoing upstream requests can additionally pass through an opt-in chain of requ
 
 | # | Step | Status |
 |---|------|--------|
-| 1 | Anthropic default forward | ❌ |
-| 2 | OpenAI passthrough | ❌ |
-| 3 | Anthropic → OpenAI translation | ❌ |
-| 4 | Request-side plugin system (with header-injection plugin) | ❌ |
+| 1 | OpenAI passthrough | ❌ |
+| 2 | Request-side plugin system (with header-injection plugin) | ❌ |
+| 3 | Claude request forward | ❌ |
+| 4 | Anthropic → OpenAI translation | ❌ |
 
 ## License
 
